@@ -27,6 +27,16 @@ from streamlit_webrtc import (
     webrtc_streamer,
 )
 
+import smtplib
+
+EMAIL_ADDRESS = "2452893543@qq.com"
+EMAIL_PASSWORD = "bsppubdbweyedieh"
+sender = EMAIL_ADDRESS
+receiver = "youtiaopaofan@163.com"
+subject = "Python email subject"
+body = "Hello, this is an email sent by python"
+msg = f"subject:{subject}\n\n{body}"
+
 HERE = Path(__file__).parent
 
 logger = logging.getLogger(__name__)
@@ -85,7 +95,8 @@ RTC_CONFIGURATION = RTCConfiguration(
 
 def main():
     st.header("项目演示")
-
+    smtp = smtplib.SMTP_SSL('smtp.qq.com',465)
+    smtp.login(EMAIL_ADDRESS,EMAIL_PASSWORD)
     object_detection_page = "实时物体检测"
     # video_filters_page = (
     #     "Real time video transform with simple OpenCV filters (sendrecv)"
@@ -106,9 +117,15 @@ def main():
     #     "Configure media constraints and HTML element styles with loopback (sendrecv)"
     # )
     # programatically_control_page = "Control the playing state programatically"
+    genre = st.radio(
+     "选择是否发送邮件",
+     ('NONE', 'MAIL'))
+
+    if genre == 'MAIL':
+        smtp.sendmail(sender,receiver,msg)
     
     app_mode = st.sidebar.selectbox(
-        "Choose the app mode",
+        "选择模式",
         [
             object_detection_page,
             # video_filters_page,
@@ -352,6 +369,7 @@ def app_object_detection():
         prob: float
 
     class MobileNetSSDVideoProcessor(VideoProcessorBase):
+        
         confidence_threshold: float
         result_queue: "queue.Queue[List[Detection]]"
 
@@ -370,6 +388,9 @@ def app_object_detection():
                 confidence = detections[0, 0, i, 2]
 
                 if confidence > self.confidence_threshold:
+                    # smtp = smtplib.SMTP_SSL('smtp.qq.com',465)
+                    # smtp.login(EMAIL_ADDRESS,EMAIL_PASSWORD)
+                    # smtp.sendmail(sender,receiver,msg)
                     # extract the index of the class label from the `detections`,
                     # then compute the (x, y)-coordinates of the bounding box for
                     # the object

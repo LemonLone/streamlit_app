@@ -5,7 +5,7 @@ smtp = smtplib.SMTP_SSL('smtp.qq.com',465)
 smtp.login(EMAIL_ADDRESS,EMAIL_PASSWORD)
 
 sender = EMAIL_ADDRESS
-receiver = EMAIL_ADDRESS
+receiver = "youtiaopaofan@163.com"
 
 subject = "Python email subject"
 body = "Hello, this is an email sent by python"
